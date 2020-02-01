@@ -1,0 +1,13 @@
+Efrain Leuck	
+Dr.Massingill
+
+	The annoying thing about vim is how black and white everything is when using to edit text files. Having seen some professors
+have customized vim/vi editors, I took it upon myself to lookup and understand what I can to do make the editor a little more
+visually appealing. What I found was the command ':colorscheme [theme]' that can be entered after alreading having used the
+':help' command. After browsing and searching through the themes I found something that took away the sort of bog-standard feel of 
+the vim/vi. I feel having the use of colors of specific aspects, ie. variables, functions, loops, etc., helps to set up defining
+boundaries in my code.
+	I had no prior experience to emacs, so I had to begin from scratch. After toying and tinkering with the interface, I found that
+all the features were similar to if not the same as the features found in vi/vim. I feel that emacs is a more modern version of vi
+in a sense that the commands you can use while reading, but not writing, are very user friendly. Where as in vi/vim, what you lack in user friendly-ness, you regain in power and control. Personally, I still prefer vi/vim to emacs, but I can still see the appeal for users
+with no prior experience to text editors.
