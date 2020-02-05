@@ -57,10 +57,6 @@ imgC = [[False, True]]
 
 tstImgLbls = [(imgA, 9), (imgB, 2), (imgC, 9)]
 
-newBuildCorpus :: [(PixelImage, Digit)] -> Corpus
-newBuildCorpus imgLbls = undefined
-
-
 -- ex. buildCorpus imgLbls 
 --           [(9, [ [[True, False]], [[False, True]] ]), (2, [[[False, False]]])]
 -- creates corpus of labeled images.
@@ -71,18 +67,9 @@ buildCorpus imgLbls = [(digit, pixImgLst digit imgLbls) | digit <- corpusDig img
 pixImgLst :: Digit -> [(PixelImage, Digit)] -> [PixelImage]
 pixImgLst dgtInpt imgLbls = [pixImg |(pixImg, digit) <- imgLbls, digit == dgtInpt]
 
-pixVal :: Digit -> [(PixelImage, Digit)] -> [PixelImage]
-pixVal digit imgLbls = undefined 
-
 -- creates a list of the possible Digit labels; removing any duplicates.
 corpusDig :: [(PixelImage, Digit)] -> [Digit]
 corpusDig imgLbl = unique (sort [ snd dig | dig <- imgLbl ])
-
---probOfDigit :: Corpus -> Digit -> Rational
---probOfDigit corpus digit = outOf (imgPixLngh )
-
-imgPixLngh :: Corpus -> Digit -> Int
-imgPixLngh corpus dig = length(snd(imgTup corpus dig))
 
 -- list of all digit labels within a corpus.
 corpDigitLbls :: Corpus -> [Digit]
@@ -125,25 +112,55 @@ probOfDigit corpus digit = if digit `elem` corpDigitLbls corpus
                            else error "Input digit not part of digit labels in corpus."
 
 
-frequency :: (Ord a) => [a] -> [(a, Int)]
-frequency xs = toList (fromListWith (+) [(x, 1) | x <- xs])
+--frequency :: (Ord a) => [a] -> [(a, Int)]
+--frequency xs = toList (fromListWith (+) [(x, 1) | x <- xs])
 
 
 probOfFeature :: [PixelImage] -> Feature -> Rational
-probOfFeature imgs ftr = undefined
+probOfFeature imgs ftr = 
+    outOf (fracNumer (bytListBlk (logicList imgs ftr))) (fracTotal imgs)
 
--- calculates denominator for probOfFeature function
-imgLength :: [PixelImage] -> Int
-imgLength imgs = length imgs
+probOfNoFeature :: [PixelImage] -> Feature -> Rational
+probOfNoFeature imgs ftr = 
+    outOf (fracNumer (bytListWht (logicList imgs ftr))) (fracTotal imgs)
 
--- outputs number equal to amount of times a value is repeated
--- in a given list of values of the same type.    
-numTimesFound :: Ord a => a -> [a] -> Integer
-numTimesFound _ [] = 0
-numTimesFound x list = sum $ map (\a -> 1) $ filter (== x) list
+-- used as numerator for probOfFeature function.
+-- calculates the total number of values that meet a specific condition.
+fracNumer :: [Int] -> Int
+fracNumer lst = sum lst
+
+-- used as denominator for probOfFeature function.
+-- calculates total number of pixel images in a list of pixel images.
+fracTotal :: [PixelImage] -> Int
+fracTotal imgs = length imgs
+
+-- runs through a list of pixel images, goes through each image and searches
+-- a specific index (feature), then creates a list of the data found in the
+-- specific index of each image.
+logicList :: [PixelImage] -> Feature -> [Bool]
+logicList imgs ftr = [ hasFeature img ftr | img <- imgs]
+
+-- calculates the number of True values; where if the value is True, then the 
+-- feature is black.
+bytListBlk :: [Bool] -> [Int]
+bytListBlk lst = [ if y then 1 else 0 | y <- lst]
+
+-- calculates same thing as bytListBlk but for if the values are False.
+bytListWht :: [Bool] -> [Int]
+bytListWht lst = [ if y then 0 else 1 | y <- lst]
 
 
+rankOfDigit :: Corpus -> Digit -> PixelImage -> Rational
+rankOfDigit corpus digit newImg = 
+    undefined
 
+classifyImage :: Corpus -> PixelImage -> Digit
+classifyImage corpus newImg = 
+    undefined
 
+listOfImg :: Corpus -> [PixelImage]
+listOfImg corpus = concat[ snd corp | corp <- corpus]
 
+helpr :: Corpus -> Digit -> [Rational]
+helpr corpus digit = [ if hasFeature pixImg ftr then probOfFeature pixImgLst ftr else probOfNoFeature pixImgLst ftr | pixImg <- listOfPixImg corpus digit, pixImgLst <- [listOfPixImg corpus digit], ftr <- allFeatures]
 
