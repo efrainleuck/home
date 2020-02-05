@@ -164,3 +164,16 @@ listOfImg corpus = concat[ snd corp | corp <- corpus]
 helpr :: Corpus -> Digit -> [Rational]
 helpr corpus digit = [ if hasFeature pixImg ftr then probOfFeature pixImgLst ftr else probOfNoFeature pixImgLst ftr | pixImg <- listOfPixImg corpus digit, pixImgLst <- [listOfPixImg corpus digit], ftr <- allFeatures]
 
+listOfIndex :: PixelImage -> [Feature]
+listOfIndex img =   let leng = length(concat img) - 1
+                in [0..leng]
+
+listOfFtrVals :: PixelImage -> [Bool]
+listOfFtrVals img = [ hasFeature img ftr | ftr <- listOfIndex img]
+
+nestedToList :: Corpus -> Digit -> PixelImage
+nestedToList corpus digit = concat(lookupVal digit corpus)
+
+testFun corpus digit newImg = let ftr = listOfIndex newImg
+                                  img = nestedToList corpus digit
+                              in [ if hasFeature img ftr then probOfFeature img ftr else probOfNoFeature]
