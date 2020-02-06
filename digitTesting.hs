@@ -5,6 +5,7 @@ import Data.Tuple (swap)
 import Data.Ratio (numerator, denominator)
 import Data.Ratio ((%))
 import Data.Map (fromListWith, toList)
+import Data.Maybe
 
 unique :: Eq a  => [a] -> [a]
 unique []       = []
@@ -54,8 +55,9 @@ lookupVal key lst = head [snd comm |comm <- lst, fst comm == key]
 imgA = [[True, False]]
 imgB = [[False, False]]
 imgC = [[False, True]]
+imgD = [[True,True]]
 
-tstImgLbls = [(imgA, 9), (imgB, 2), (imgC, 9)]
+tstImgLbls = [(imgA, 9), (imgB, 2), (imgC, 9), (imgD,2)]
 
 -- ex. buildCorpus imgLbls 
 --           [(9, [ [[True, False]], [[False, True]] ]), (2, [[[False, False]]])]
@@ -149,31 +151,58 @@ bytListBlk lst = [ if y then 1 else 0 | y <- lst]
 bytListWht :: [Bool] -> [Int]
 bytListWht lst = [ if y then 0 else 1 | y <- lst]
 
-
-rankOfDigit :: Corpus -> Digit -> PixelImage -> Rational
-rankOfDigit corpus digit newImg = 
-    undefined
-
-classifyImage :: Corpus -> PixelImage -> Digit
-classifyImage corpus newImg = 
-    undefined
-
 listOfImg :: Corpus -> [PixelImage]
 listOfImg corpus = concat[ snd corp | corp <- corpus]
 
-helpr :: Corpus -> Digit -> [Rational]
-helpr corpus digit = [ if hasFeature pixImg ftr then probOfFeature pixImgLst ftr else probOfNoFeature pixImgLst ftr | pixImg <- listOfPixImg corpus digit, pixImgLst <- [listOfPixImg corpus digit], ftr <- allFeatures]
-
-listOfIndex :: PixelImage -> [Feature]
-listOfIndex img =   let leng = length(concat img) - 1
+listOfFtrs :: PixelImage -> [Feature]
+listOfFtrs img =   let leng = length(concat img) - 1
                 in [0..leng]
 
 listOfFtrVals :: PixelImage -> [Bool]
-listOfFtrVals img = [ hasFeature img ftr | ftr <- listOfIndex img]
+listOfFtrVals img = [ hasFeature img ftr | ftr <- listOfFtrs img]
 
 nestedToList :: Corpus -> Digit -> PixelImage
 nestedToList corpus digit = concat(lookupVal digit corpus)
 
-testFun corpus digit newImg = let ftr = listOfIndex newImg
-                                  img = nestedToList corpus digit
-                              in [ if hasFeature img ftr then probOfFeature img ftr else probOfNoFeature]
+--testFun corpus digit newImg = let ftr = listOfIndex newImg
+--                                  img = nestedToList corpus digit
+--                              in [ if hasFeature img ftr then probOfFeature img ftr else probOfNoFeature]
+
+
+numerList corpus digit newImg =
+ let corp = corpus
+ in [ if (hasFeature (nestedToList corp digit) (ftr)) == (hasFeature newImg ftr) then 1 else 0 | ftr <- listOfFtrs newImg]
+
+
+denomList corpus digit newImg =
+  [ length(lookupVal digit corpus) + (lst - 1) | lst <- numerList corpus digit newImg]
+
+rankOfDigit :: Corpus -> Digit -> PixelImage -> Rational
+rankOfDigit corpus digit newImg = outOf (product(numerList corpus digit newImg)) (product(denomList corpus digit newImg))
+
+ranksOfDigits :: Corpus -> PixelImage -> [Rational]
+ranksOfDigits corpus newImg = 
+    let zero = if 0 `elem` corpDigitLbls corpus then [rankOfDigit corpus 0 newImg] else [outOf 0 1]
+        one = if 1 `elem` corpDigitLbls corpus then [rankOfDigit corpus 1 newImg] else [outOf 0 1]
+        two = if 2 `elem` corpDigitLbls corpus then [rankOfDigit corpus 2 newImg] else [outOf 0 1]
+        three = if 3 `elem` corpDigitLbls corpus then [rankOfDigit corpus 3 newImg] else [outOf 0 1]
+        four = if 4 `elem` corpDigitLbls corpus then [rankOfDigit corpus 4 newImg] else [outOf 0 1]
+        five = if 5 `elem` corpDigitLbls corpus then [rankOfDigit corpus 5 newImg] else [outOf 0 1]
+        six = if 6 `elem` corpDigitLbls corpus then [rankOfDigit corpus 6 newImg] else [outOf 0 1]
+        seven = if 7 `elem` corpDigitLbls corpus then [rankOfDigit corpus 7 newImg] else [outOf 0 1]
+        eight = if 8 `elem` corpDigitLbls corpus then [rankOfDigit corpus 8 newImg] else [outOf 0 1]
+        nine = if 9 `elem` corpDigitLbls corpus then [rankOfDigit corpus 9 newImg] else [outOf 0 1]
+    in zero ++ one ++ two ++ three ++ four ++ five ++ six ++ seven ++ eight ++ nine
+
+classifyImage :: Corpus -> PixelImage -> Digit
+classifyImage corpus newImg = getIndex (ranksOfDigits corpus newImg) (maximum(ranksOfDigits corpus newImg)) 
+
+
+
+getIndex :: (Eq t) => [t] -> t -> Integer
+getIndex xs y = getIndex' xs y 0
+  where
+    getIndex' :: (Eq t) => [t] -> t -> Integer -> Integer
+    getIndex' [] _ _                 = -1
+    getIndex' (x:xs) y i | x == y    = i
+                         | otherwise = getIndex' xs y (i + 1)
