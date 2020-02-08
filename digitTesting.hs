@@ -168,12 +168,12 @@ nestedToList corpus digit = concat(lookupVal digit corpus)
 --                                  img = nestedToList corpus digit
 --                              in [ if hasFeature img ftr then probOfFeature img ftr else probOfNoFeature]
 
-
+numerList :: Corpus -> Digit -> PixelImage -> [Int]
 numerList corpus digit newImg =
  let corp = corpus
  in [ if (hasFeature (nestedToList corp digit) (ftr)) == (hasFeature newImg ftr) then 1 else 0 | ftr <- listOfFtrs newImg]
 
-
+denomList :: Corpus -> Digit -> PixelImage -> [Int]
 denomList corpus digit newImg =
   [ length(lookupVal digit corpus) + (lst - 1) | lst <- numerList corpus digit newImg]
 
