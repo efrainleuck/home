@@ -1,0 +1,26 @@
+#!/bin/bash
+#
+# usage:  mail-files files_to_mail
+#
+to_addr=bmassing@cs.trinity.edu
+cc_addr=$USER@trinity.edu
+if [ -z "$1" ]
+then
+    echo usage is `basename $0` files_to_mail
+    exit 1
+fi
+for f in "$@"
+do
+    if [ ! -f "$f" ]
+    then
+        echo file $f not found
+        exit 2
+    fi
+done
+echo "enter homework number for subject line:"
+read hw_num
+tmpfile=/tmp/tmp-$$
+echo "enter text for body of e-mail message (control-D to end):"
+cat >> $tmpfile
+mutt -c $cc_addr -s "csci 1120 hw $hw_num" $to_addr -a "$@" --  < $tmpfile
+rm $tmpfile

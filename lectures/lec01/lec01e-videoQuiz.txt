@@ -1,0 +1,3 @@
+One could add the following line to 'simple-io.c' to print the values of variables a, b, c, and d:
+
+	printf("%d, %d, $d, %d", a, b, c, d);

@@ -1,0 +1,1 @@
+The makefile I created on my macbook air was able to compile using the settings you recommended.

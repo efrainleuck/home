@@ -1,0 +1,16 @@
+
+int main(void){
+	int one, two, three, four;
+	int abs;
+	
+	printf("Enter four integers: \n");
+	scanf("%d %d %d %d", &one, &two, &three, &four);
+	
+	one = one < 0 ? one * -1 : one;
+	two = two < 0 ? two * -1: two;
+	three = three < 0 ? three * -1: three;
+	four = four < 0 ? four * -1: four;
+	
+	return one + two + three + four >= 4 ? printf("All is well.\n") : printf("Error, input not valid.\n");
+}
+	

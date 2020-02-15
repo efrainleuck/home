@@ -1,0 +1,4 @@
+The varibles defined are:
+	int x, y, w, z;
+	where the values are the following after the code executes:
+	x = 20 ; y = 8 ; w = 2 ; z = 4

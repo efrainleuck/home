@@ -1,0 +1,2 @@
+I was familiar with the fact that different source codes have compilers which may or may not be different than that of other souce codes. These compilers then compile and run the code in 
+different methods than other source code. I was not, however, familiar with the overall terminology behind these processes; such as the "object code" un the compiler of C/C++.

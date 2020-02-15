@@ -1,0 +1,12 @@
+int main(void){
+	int input, abs;
+
+	printf("This program will return the absolute value of an int.\n");
+	printf("Enter an int: \n");
+	scanf("%d", &input);
+	
+	abs = input < 0 ? input * -1: input;
+	
+	printf("The absolute value of %d is: %d\n", input, abs);
+
+} 

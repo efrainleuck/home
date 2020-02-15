@@ -1,0 +1,5 @@
+I beleive C checks whether an index is in range of an array primarily because of the dynamic aspect of C. Whereas in most modern programming languages, they have fail safes to ensure
+that an index is within the memory of a given array. This is good to ensure that no other variables are changed due to an accidental buffer overflow; however, I feel that this may
+take up more memory than the way C is built to handle and use arrays. By dynamically checking arrays and their indices -at run time- the size of the memory allocated for the array may
+or may not change depending on the code in the program. This potentially means that the array could become very small at run time or very large, either way the size of the memory
+is not constantly in a static state; despite the errors that could occur, ie. "segmentation fault" or "buffer overflow".

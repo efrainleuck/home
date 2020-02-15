@@ -1,0 +1,3 @@
+I believe there are so many functions to compute the absolute value of an input because not all inputs are the same and, therefore, having only one function that computes the absolute value
+of an input will inevitably run into an error when the input is of a type that is different than the type of the function. In order to get around such errors, multiple copies of the 
+function that computes the absolute value of an input with different type parameters is required; these functions are essentially identically, just with different argument types.
